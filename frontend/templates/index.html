@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Resource Utilization System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <span class="icon">⚡</span>
+                <span class="brand-name">Smart Resource Utilization</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#upload" class="nav-link">Upload Data</a></li>
+                <li><a href="#analytics" class="nav-link">Analytics</a></li>
+                <li><a href="#predictions" class="nav-link">Predictions</a></li>
+                <li><a href="#recommendations" class="nav-link">Recommendations</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Intelligent Energy Management System</h1>
+                <p class="hero-subtitle">Analyze historical resource usage, predict future consumption, and optimize efficiency with AI-powered insights</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="scrollToSection('upload')">Get Started</button>
+                    <button class="btn btn-secondary" onclick="loadSampleData()">Try Sample Data</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section id="upload" class="section">
+        <div class="container">
+            <h2 class="section-title">Upload Your Dataset</h2>
+            <p class="section-subtitle">Upload a CSV file containing resource usage data for analysis</p>
+            
+            <div class="upload-card card">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📁</div>
+                    <h3>Drop your CSV file here</h3>
+                    <p>or</p>
+                    <input type="file" id="fileInput" accept=".csv" style="display: none;">
+                    <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">Browse Files</button>
+                    <p class="upload-hint">Maximum file size: 16MB</p>
+                </div>
+                
+                <div id="uploadStatus" class="upload-status"></div>
+                
+                <div id="dataPreview" class="data-preview" style="display: none;">
+                    <h3>Data Preview</h3>
+                    <div id="previewTable"></div>
+                    <button class="btn btn-primary" onclick="analyzeData()">Analyze Data</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analytics Section -->
+    <section id="analytics" class="section section-gray">
+        <div class="container">
+            <h2 class="section-title">Analytics Dashboard</h2>
+            <p class="section-subtitle">Comprehensive analysis of resource consumption patterns</p>
+            
+            <div id="analyticsContent" class="analytics-content">
+                <div class="alert alert-info">
+                    <span class="alert-icon">ℹ️</span>
+                    <span>Upload and analyze data to view insights</span>
+                </div>
+            </div>
+            
+            <!-- Statistics Cards -->
+            <div id="statsCards" class="stats-grid" style="display: none;">
+                <div class="stat-card card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Total Consumption</div>
+                        <div class="stat-value" id="totalConsumption">-</div>
+                        <div class="stat-unit">kWh</div>
+                    </div>
+                </div>
+                <div class="stat-card card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Average Usage</div>
+                        <div class="stat-value" id="avgConsumption">-</div>
+                        <div class="stat-unit">kWh</div>
+                    </div>
+                </div>
+                <div class="stat-card card">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Peak Usage</div>
+                        <div class="stat-value" id="peakConsumption">-</div>
+                        <div class="stat-unit">kWh</div>
+                    </div>
+                </div>
+                <div class="stat-card card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Model Accuracy</div>
+                        <div class="stat-value" id="modelAccuracy">-</div>
+                        <div class="stat-unit">%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Charts -->
+            <div id="chartsContainer" class="charts-container" style="display: none;">
+                <div class="chart-card card">
+                    <h3>Hourly Usage Trends</h3>
+                    <canvas id="hourlyChart"></canvas>
+                </div>
+                
+                <div class="chart-card card">
+                    <h3>Department-wise Consumption</h3>
+                    <canvas id="departmentChart"></canvas>
+                </div>
+                
+                <div class="chart-card card">
+                    <h3>Weekday vs Weekend Comparison</h3>
+                    <canvas id="weekdayChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Predictions Section -->
+    <section id="predictions" class="section">
+        <div class="container">
+            <h2 class="section-title">Usage Predictions</h2>
+            <p class="section-subtitle">AI-powered forecasting using Linear Regression</p>
+            
+            <div class="prediction-controls card">
+                <h3>Generate Predictions</h3>
+                <div class="control-group">
+                    <label>
+                        <input type="radio" name="dayType" value="0" checked> Weekday
+                    </label>
+                    <label>
+                        <input type="radio" name="dayType" value="1"> Weekend
+                    </label>
+                </div>
+                <button class="btn btn-primary" onclick="generatePredictions()">Predict Next 24 Hours</button>
+            </div>
+            
+            <div id="predictionsContent" class="predictions-content">
+                <div class="alert alert-info">
+                    <span class="alert-icon">ℹ️</span>
+                    <span>Analyze data first, then generate predictions</span>
+                </div>
+            </div>
+            
+            <div id="predictionChart" class="chart-card card" style="display: none;">
+                <h3>24-Hour Usage Forecast</h3>
+                <canvas id="forecastChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recommendations Section -->
+    <section id="recommendations" class="section section-gray">
+        <div class="container">
+            <h2 class="section-title">Optimization Recommendations</h2>
+            <p class="section-subtitle">Data-driven insights to reduce wastage and improve efficiency</p>
+            
+            <div id="recommendationsContent" class="recommendations-content">
+                <div class="alert alert-info">
+                    <span class="alert-icon">ℹ️</span>
+                    <span>Recommendations will appear after data analysis</span>
+                </div>
+            </div>
+            
+            <div id="recommendationsGrid" class="recommendations-grid" style="display: none;"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Smart Resource Utilization System. Built with Python, Flask, and Machine Learning.</p>
+            <p>Designed for research and educational purposes</p>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loader"></div>
+        <p>Processing...</p>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
